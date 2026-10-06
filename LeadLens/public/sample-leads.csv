@@ -1,0 +1,15 @@
+company,website,industry,city,country,employees,email,source
+Northstar IT,https://northstar.example,IT Services,Austin,United States,42,hello@northstar.example,Synthetic demo
+Cobalt Systems,https://cobalt.example,IT Services,Denver,United States,85,team@cobalt.example,Synthetic demo
+Brightpath Networks,https://brightpath.example,IT Services,Boston,United States,120,info@brightpath.example,Synthetic demo
+Harbor Managed Services,https://harborms.example,IT Services,Seattle,United States,32,hello@harborms.example,Synthetic demo
+Vertex Cloud,https://vertex.example,IT Services,Chicago,United States,240,sales@vertex.example,Synthetic demo
+Juniper Digital,https://juniperdigital.example,Software,San Francisco,United States,65,hello@juniperdigital.example,Synthetic demo
+Clearwater Tech,https://clearwater.example,IT Services,Toronto,Canada,58,contact@clearwater.example,Synthetic demo
+Atlas Security,https://atlassec.example,Cybersecurity,New York,United States,76,team@atlassec.example,Synthetic demo
+Meridian Solutions,https://meridian.example,IT Services,Dallas,United States,24,contact-meridian,Synthetic demo
+Oakline Consulting,https://oakline.example,Consulting,London,United Kingdom,18,,Synthetic demo
+Signal IT,,IT Services,Miami,United States,15,hello@signal.example,Synthetic demo
+Pinecrest Networks,https://pinecrest.example,IT Services,Portland,United States,,,Synthetic demo
+Northstar IT duplicate,https://www.northstar.example/about,IT Services,Austin,United States,42,hello@northstar.example,Synthetic demo
+Cobalt duplicate,https://cobalt.example/contact,IT Services,Denver,United States,85,team@cobalt.example,Synthetic demo

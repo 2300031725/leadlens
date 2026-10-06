@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {importRows,parseCsv,dedupKey,domain,score,quality,defaultProfile,exportCsv} from '../lib/leads.ts';
+const sample=readFileSync(new URL('../public/sample-leads.csv',import.meta.url),'utf8');
+test('sample has 14 valid rows and 12 distinct companies',()=>{const p=importRows(sample);assert.equal(p.total,14);assert.equal(p.rejected,0);assert.equal(new Set(p.leads.map(dedupKey)).size,12);});
+test('domain dedup ignores case, www, paths and protocols',()=>{assert.equal(domain('HTTPS://WWW.NORTHSTAR.EXAMPLE/about'),'northstar.example');const p=importRows(sample);assert.equal(dedupKey(p.leads[0]),dedupKey(p.leads[12]));assert.equal(domain('javascript:alert(1)'), '');});
+test('CSV handles BOM, quoted comma, escaped quotes and multiline values',()=>{assert.deepEqual(parseCsv('\ufeffcompany,source\r\n"Acme, Inc","A ""quoted""\nsource"'),[['company','source'],['Acme, Inc','A "quoted"\nsource']]);assert.throws(()=>parseCsv('company\n"Unclosed'));});
+test('bad shape and blank company rejected; invalid employee count becomes unknown',()=>{const p=importRows('company,employees\nAcme,-3\n,20\nExtra,2,value');assert.equal(p.rejected,2);assert.equal(p.leads[0].employees,null);assert.throws(()=>importRows('name\nAcme'));});
+test('score is explainable and responds to target changes',()=>{const l=importRows(sample).leads[0];assert.equal(score(l,defaultProfile).total,100);assert.equal(score(l,{...defaultProfile,country:'India'}).total,75);assert.equal(score(l,{...defaultProfile,min:50}).total,80);assert.equal(score(l,defaultProfile).reasons.reduce((n,r)=>n+r.points,0),100);});
+test('quality flags malformed email and missing information',()=>{const p=importRows(sample);assert.ok(quality(p.leads[8]).includes('Invalid email format'));assert.ok(quality(p.leads[11]).includes('Unknown company size'));assert.equal(quality(p.leads[0]).length,0);});
+test('CSV export roundtrips and neutralizes spreadsheet formulas',()=>{const l=importRows(sample).leads[0];const csv=exportCsv([{...l,company:'=HYPERLINK("bad")'}],defaultProfile);const rows=parseCsv(csv);assert.equal(rows[1][0],'\'=HYPERLINK("bad")');assert.equal(rows[1][8],'100');});
+test('repeat import dedup keys are stable',()=>{assert.deepEqual(importRows(sample).leads.map(dedupKey),importRows(sample).leads.map(dedupKey));});
